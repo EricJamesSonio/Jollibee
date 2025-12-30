@@ -1,4 +1,4 @@
-mkdir menu-service
-cd menu-service
+mkdir cart-service
+cd cart-service
 npm init -y
-npm install express sqlite3 cors
+npm install express sqlite3 dotenv kafkajs
