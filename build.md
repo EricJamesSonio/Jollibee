@@ -1,4 +1,4 @@
-mkdir order-service
-cd order-service
+mkdir payment-service
+cd payment-service
 npm init -y
 npm install express sqlite3 dotenv kafkajs
