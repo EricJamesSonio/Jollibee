@@ -14,13 +14,9 @@ module.exports = {
    */
   async processPayment(orderId, amountPaid) {
     const order = await repository.getPendingOrder(Number(orderId));
-    if (!order) {
-      throw new Error("Order not found or already paid");
-    }
+    if (!order) throw new Error("Order not found or already paid");
 
-    if (amountPaid < order.total) {
-      throw new Error("Insufficient payment");
-    }
+    if (amountPaid < order.total) throw new Error("Insufficient payment");
 
     const change = amountPaid - order.total;
 

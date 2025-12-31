@@ -1,19 +1,19 @@
 const { Kafka } = require("kafkajs");
 
 const kafka = new Kafka({
-  clientId: "order-service",
+  clientId: "payment-service",
   brokers: ["localhost:9092"]
 });
 
 const producer = kafka.producer();
 
-async function sendOrderCreated(order) {
+async function sendPaymentConfirmed(payment) {
   await producer.connect();
   await producer.send({
-    topic: "ORDER_CREATED",
-    messages: [{ value: JSON.stringify(order) }]
+    topic: "PAYMENT_CONFIRMED",
+    messages: [{ value: JSON.stringify(payment) }]
   });
   await producer.disconnect();
 }
 
-module.exports = { sendOrderCreated };
+module.exports = { sendPaymentConfirmed };

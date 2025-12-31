@@ -1,9 +1,7 @@
 const db = require("../../database/db");
 
 module.exports = {
-  // ========================
-  // Payments
-  // ========================
+  // Save payment record
   savePayment(payment) {
     return new Promise((resolve, reject) => {
       const { order_id, total, amount_paid, change } = payment;
@@ -21,9 +19,7 @@ module.exports = {
     });
   },
 
-  // ========================
-  // Pending Orders
-  // ========================
+  // Pending orders
   savePendingOrder(order) {
     return new Promise((resolve, reject) => {
       db.run(
