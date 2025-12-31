@@ -16,6 +16,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
@@ -27,8 +28,11 @@ services:
       - "3001:3001"
     environment:
       - PORT=3001
+      - KAFKA_BROKER=kafka:9092
     depends_on:
       - kafka
+    volumes:
+      - ./menu-service/src/database:/usr/src/app/src/database
 
   cart-service:
     build: ./cart-service
@@ -37,8 +41,11 @@ services:
       - "3002:3002"
     environment:
       - PORT=3002
+      - KAFKA_BROKER=kafka:9092
     depends_on:
       - kafka
+    volumes:
+      - ./cart-service/src/database:/usr/src/app/src/database
 
   order-service:
     build: ./order-service
@@ -47,8 +54,11 @@ services:
       - "3003:3003"
     environment:
       - PORT=3003
+      - KAFKA_BROKER=kafka:9092
     depends_on:
       - kafka
+    volumes:
+      - ./order-service/src/database:/usr/src/app/src/database
 
   payment-service:
     build: ./payment-service
@@ -57,8 +67,11 @@ services:
       - "3004:3004"
     environment:
       - PORT=3004
+      - KAFKA_BROKER=kafka:9092
     depends_on:
       - kafka
+    volumes:
+      - ./payment-service/src/database:/usr/src/app/src/database
 
   api-gateway:
     image: nginx:alpine
