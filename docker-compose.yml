@@ -2,22 +2,25 @@ version: "3.9"
 
 services:
   zookeeper:
-    image: wurstmeister/zookeeper:3.4.6
+    image: confluentinc/cp-zookeeper:7.5.0
     container_name: jollibee-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
 
   kafka:
-    image: wurstmeister/kafka:2.12-2.5.0
+    image: confluentinc/cp-kafka:7.5.0
     container_name: jollibee-kafka
-    ports:
-      - "9092:9092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
     depends_on:
       - zookeeper
 
@@ -74,12 +77,10 @@ services:
       - ./payment-service/src/database:/usr/src/app/src/database
 
   api-gateway:
-    image: nginx:alpine
+    build: ./api-gateway
     container_name: api-gateway
     ports:
       - "8080:80"
-    volumes:
-      - ./api-gateway/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - menu-service
       - cart-service
