@@ -2,8 +2,8 @@ const { Kafka } = require("kafkajs");
 const paymentService = require("../modules/payment/service");
 
 const kafka = new Kafka({
-  clientId: "payment-service-consumer",
-  brokers: ["localhost:9092"]
+  clientId: process.env.KAFKA_CLIENT_ID || "payment-service-consumer",
+  brokers: [process.env.KAFKA_BROKER || "localhost:9092"]
 });
 
 const consumer = kafka.consumer({ groupId: "payment-group" });

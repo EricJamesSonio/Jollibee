@@ -1,8 +1,8 @@
 const { Kafka } = require("kafkajs");
 
 const kafka = new Kafka({
-  clientId: "cart-service",
-  brokers: ["localhost:9092"] // adjust if dockerized
+  clientId: process.env.KAFKA_CLIENT_ID || "cart-service",
+  brokers: [process.env.KAFKA_BROKER || "localhost:9092"]
 });
 
 const producer = kafka.producer();

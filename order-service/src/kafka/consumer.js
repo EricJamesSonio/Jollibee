@@ -2,8 +2,8 @@ const { Kafka } = require("kafkajs");
 const orderService = require("../modules/order/service");
 
 const kafka = new Kafka({
-  clientId: "order-service-consumer",
-  brokers: ["localhost:9092"]
+  clientId: process.env.KAFKA_CLIENT_ID || "order-service-consumer",
+  brokers: [process.env.KAFKA_BROKER || "localhost:9092"]
 });
 
 const consumer = kafka.consumer({ groupId: "order-service-group" });
@@ -22,11 +22,9 @@ async function runConsumer() {
         case "CART_CHECKOUT":
           await orderService.createOrderFromCart(payload);
           break;
-
         case "PAYMENT_CONFIRMED":
           await orderService.handlePaymentConfirmed(payload);
           break;
-
         default:
           console.warn("Unhandled topic:", topic);
       }
