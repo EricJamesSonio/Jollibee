@@ -1,6 +1,9 @@
 const db = require("../../database/db");
 
 module.exports = {
+  // ========================
+  // Payments
+  // ========================
   savePayment(payment) {
     return new Promise((resolve, reject) => {
       const { order_id, total, amount_paid, change } = payment;
@@ -14,6 +17,40 @@ module.exports = {
           if (err) return reject(err);
           resolve({ id: this.lastID, ...payment, paid_at: paidAt });
         }
+      );
+    });
+  },
+
+  // ========================
+  // Pending Orders
+  // ========================
+  savePendingOrder(order) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        `INSERT OR IGNORE INTO pending_orders (order_id, total)
+         VALUES (?, ?)`,
+        [order.id, order.total],
+        (err) => (err ? reject(err) : resolve())
+      );
+    });
+  },
+
+  getPendingOrder(orderId) {
+    return new Promise((resolve, reject) => {
+      db.get(
+        `SELECT * FROM pending_orders WHERE order_id = ?`,
+        [orderId],
+        (err, row) => (err ? reject(err) : resolve(row))
+      );
+    });
+  },
+
+  deletePendingOrder(orderId) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        `DELETE FROM pending_orders WHERE order_id = ?`,
+        [orderId],
+        (err) => (err ? reject(err) : resolve())
       );
     });
   }

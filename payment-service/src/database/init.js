@@ -1,8 +1,14 @@
 const db = require("./db");
-const paymentModel = require("./models/payment");
+
+const models = [
+  require("./models/payment"),
+  require("./models/pending_order") // 🔥 add this
+];
 
 module.exports = async function initDatabase() {
   db.serialize(() => {
-    db.run(paymentModel.schema);
+    models.forEach((model) => {
+      db.run(model.schema);
+    });
   });
 };

@@ -1,16 +1,22 @@
 const repository = require("./repository");
 const { sendPaymentConfirmed } = require("../../kafka/producer");
 
-const pendingOrders = new Map(); // order_id -> order
-
 module.exports = {
-  cacheOrder(order) {
-    pendingOrders.set(order.id, order);
+  /**
+   * Called by Kafka consumer when ORDER_CREATED is received
+   */
+  async cacheOrder(order) {
+    await repository.savePendingOrder(order);
   },
 
+  /**
+   * Called by API route to process payment
+   */
   async processPayment(orderId, amountPaid) {
-    const order = pendingOrders.get(Number(orderId));
-    if (!order) throw new Error("Order not found");
+    const order = await repository.getPendingOrder(Number(orderId));
+    if (!order) {
+      throw new Error("Order not found or already paid");
+    }
 
     if (amountPaid < order.total) {
       throw new Error("Insufficient payment");
@@ -19,18 +25,19 @@ module.exports = {
     const change = amountPaid - order.total;
 
     const payment = await repository.savePayment({
-      order_id: order.id,
+      order_id: order.order_id,
       total: order.total,
       amount_paid: amountPaid,
       change
     });
 
     await sendPaymentConfirmed({
-      order_id: order.id,
+      order_id: order.order_id,
       payment_id: payment.id
     });
 
-    pendingOrders.delete(order.id);
+    await repository.deletePendingOrder(order.order_id);
+
     return payment;
   }
 };
