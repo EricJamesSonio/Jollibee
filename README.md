@@ -50,6 +50,23 @@ Event Driven Architecture
 
 ---------------------------------------------------------------------------------------
 
+Services needed:
+Menu Service
+- display menu items and category
+
+Cart Service
+- handles cart operations 
+- add to cart
+- remove to cart
+- find item in cart
+- total computation only (so user know how much before checkout)
+
+Order service
+- checkout 
+
+---------------------------------------------------------------------------------------
+
+
 Step by step building as a solo developer!
 
 1. Microservices - build the services and make sure its working first
