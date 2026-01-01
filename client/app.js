@@ -6,22 +6,24 @@ const categoryTitle = document.getElementById("category-title");
 
 let categoriesCache = [];
 let activeCategoryCode = null;
+let isLoadingMenu = false;
 
 // Fetch categories
 async function fetchCategories() {
   try {
     const res = await fetch(`${API_BASE}/menu/categories`);
     const categories = await res.json();
+
     categoriesCache = categories;
     renderCategories(categories);
 
-    // ✅ Default load: Chicken
+    // ✅ Default load only ONCE
     const defaultCategory =
       categories.find(c => c.name.toLowerCase().includes("chicken")) ||
       categories[0];
 
     if (defaultCategory) {
-      setActiveCategory(defaultCategory.code, defaultCategory.name);
+      setActiveCategory(defaultCategory.code, defaultCategory.name, true);
     }
   } catch (err) {
     console.error("Failed to fetch categories:", err);
@@ -45,8 +47,11 @@ function renderCategories(categories) {
   });
 }
 
-// Handle category change (SPA behavior)
-function setActiveCategory(code, name) {
+// Handle category change
+function setActiveCategory(code, name, force = false) {
+  // ✅ Prevent duplicate reload
+  if (!force && activeCategoryCode === code) return;
+
   activeCategoryCode = code;
   categoryTitle.textContent = name;
 
@@ -59,6 +64,11 @@ function setActiveCategory(code, name) {
 
 // Fetch menu items
 async function fetchMenuItems(categoryCode) {
+  if (isLoadingMenu) return;
+
+  isLoadingMenu = true;
+  menuItemsDiv.innerHTML = "<p>Loading...</p>";
+
   try {
     const res = await fetch(
       `${API_BASE}/menu/menu-items?category=${categoryCode}`
@@ -67,6 +77,8 @@ async function fetchMenuItems(categoryCode) {
     renderMenuItems(items);
   } catch (err) {
     console.error("Failed to fetch menu items:", err);
+  } finally {
+    isLoadingMenu = false;
   }
 }
 
@@ -82,10 +94,19 @@ function renderMenuItems(items) {
   items.forEach(item => {
     const div = document.createElement("div");
     div.className = "menu-item";
+
     div.innerHTML = `
+      <img 
+        src="${API_BASE}${item.image_url}" 
+        alt="${item.name}"
+        class="menu-item-img"
+        loading="lazy"
+        onerror="this.src='${API_BASE}/images/placeholder.png'"
+      />
       <h3>${item.name}</h3>
       <p>₱${item.price.toFixed(2)}</p>
     `;
+
     menuItemsDiv.appendChild(div);
   });
 }
