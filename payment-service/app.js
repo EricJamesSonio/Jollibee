@@ -12,9 +12,18 @@ app.use("/api", container.routes);
 app.use(container.errorMiddleware);
 
 (async () => {
-  await initDatabase();
-  await runConsumer();
-  app.listen(PORT, () => {
-    console.log(`Payment Service running on port ${PORT}`);
-  });
+  try {
+    await initDatabase();
+    console.log("✅ Payment database initialized");
+
+    // Start Kafka consumer safely (non-blocking)
+    runConsumer();
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Payment Service running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Failed to start Payment Service:", err);
+    process.exit(1);
+  }
 })();

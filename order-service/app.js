@@ -12,9 +12,18 @@ app.use("/api", container.routes);
 app.use(container.errorMiddleware);
 
 (async () => {
-  await initDatabase();
-  await runConsumer(); // start Kafka consumer
-  app.listen(PORT, () => {
-    console.log(`Order Service running on port ${PORT}`);
-  });
+  try {
+    await initDatabase();
+    console.log("✅ Order database initialized");
+
+    // Start Kafka consumer (non-blocking, retry-safe)
+    runConsumer();
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Order Service running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Failed to start Order Service:", err);
+    process.exit(1);
+  }
 })();

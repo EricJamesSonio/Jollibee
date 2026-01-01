@@ -2,34 +2,78 @@ const { Kafka } = require("kafkajs");
 const orderService = require("../modules/order/service");
 
 const kafka = new Kafka({
-  clientId: process.env.KAFKA_CLIENT_ID || "order-service-consumer",
-  brokers: [process.env.KAFKA_BROKER || "localhost:9092"]
+  clientId: process.env.KAFKA_CLIENT_ID || "order-service",
+  brokers: [process.env.KAFKA_BROKER], // must be kafka:9092 in Docker
+  retry: {
+    retries: 10,
+    initialRetryTime: 3000,
+  },
 });
 
-const consumer = kafka.consumer({ groupId: "order-service-group" });
+const consumer = kafka.consumer({
+  groupId: "order-service-group",
+});
+
+let isRunning = false;
 
 async function runConsumer() {
-  await consumer.connect();
+  if (isRunning) return;
 
-  await consumer.subscribe({ topic: "CART_CHECKOUT", fromBeginning: false });
-  await consumer.subscribe({ topic: "PAYMENT_CONFIRMED", fromBeginning: false });
+  try {
+    await consumer.connect();
 
-  await consumer.run({
-    eachMessage: async ({ topic, message }) => {
-      const payload = JSON.parse(message.value.toString());
+    await consumer.subscribe({
+      topic: "CART_CHECKOUT",
+      fromBeginning: false,
+    });
 
-      switch (topic) {
-        case "CART_CHECKOUT":
-          await orderService.createOrderFromCart(payload);
-          break;
-        case "PAYMENT_CONFIRMED":
-          await orderService.handlePaymentConfirmed(payload);
-          break;
-        default:
-          console.warn("Unhandled topic:", topic);
-      }
-    }
-  });
+    await consumer.subscribe({
+      topic: "PAYMENT_CONFIRMED",
+      fromBeginning: false,
+    });
+
+    await consumer.run({
+      eachMessage: async ({ topic, message }) => {
+        try {
+          const payload = JSON.parse(message.value.toString());
+
+          switch (topic) {
+            case "CART_CHECKOUT":
+              await orderService.createOrderFromCart(payload);
+              break;
+
+            case "PAYMENT_CONFIRMED":
+              await orderService.handlePaymentConfirmed(payload);
+              break;
+
+            default:
+              console.warn("Unhandled topic:", topic);
+          }
+        } catch (err) {
+          console.error("Message processing failed:", err.message);
+        }
+      },
+    });
+
+    isRunning = true;
+    console.log("✅ Kafka consumer connected (order-service)");
+  } catch (err) {
+    console.error("❌ Kafka not ready, retrying in 5s...", err.message);
+    setTimeout(runConsumer, 5000);
+  }
 }
+
+// Graceful shutdown
+process.on("SIGTERM", async () => {
+  console.log("Shutting down Kafka consumer...");
+  await consumer.disconnect();
+  process.exit(0);
+});
+
+process.on("SIGINT", async () => {
+  console.log("Shutting down Kafka consumer...");
+  await consumer.disconnect();
+  process.exit(0);
+});
 
 module.exports = { runConsumer };
