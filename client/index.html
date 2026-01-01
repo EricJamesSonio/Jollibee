@@ -1,72 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jollibee Kiosk</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #fff4e6;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #f7b733;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      font-size: 2rem;
-      font-weight: bold;
-    }
-    #categories {
-      display: flex;
-      padding: 1rem;
-      gap: 1rem;
-      overflow-x: auto;
-      background: #ffe0b2;
-    }
-    .category-btn {
-      padding: 0.5rem 1rem;
-      background: #ff6f00;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .category-btn.active {
-      background: #e65100;
-    }
-    #menu-items {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      padding: 1rem;
-    }
-    .menu-item {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 1rem;
-      flex: 1 1 calc(25% - 2rem);
-      min-width: 150px;
-      text-align: center;
-    }
-    .menu-item h3 {
-      margin: 0.5rem 0;
-    }
-    .menu-item p {
-      font-weight: bold;
-      color: #ff6f00;
-      margin: 0.5rem 0 0 0;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>Jollibee Kiosk</header>
-  <div id="categories"></div>
-  <div id="menu-items"></div>
+
+  <header class="header">
+    Jollibee Self-Order Kiosk
+  </header>
+
+  <div class="kiosk-container">
+    <!-- Sidebar -->
+    <aside id="categories" class="sidebar"></aside>
+
+    <!-- Main Display -->
+    <main class="menu-screen">
+      <h2 id="category-title">Chicken</h2>
+      <div id="menu-items" class="menu-grid"></div>
+    </main>
+  </div>
 
   <script src="app.js"></script>
 </body>
