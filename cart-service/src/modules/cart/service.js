@@ -31,16 +31,12 @@ module.exports = {
     const cart = await this.getCart();
     if (!cart.items.length) throw new Error("Cart is empty");
 
-    await sendCartCheckout(cart); // Kafka event
-    await repository.clearCart();
+    await sendCartCheckout(cart); 
+    await repository.clearCart();   
     return cart;
   },
-    async clearCart() {
-    return new Promise((resolve, reject) => {
-      db.run(`DELETE FROM cart_items`, function(err) { // adjust table name if needed
-        if (err) return reject(err);
-        resolve();
-      });
-    });
+
+  async clearCart() {
+    return repository.clearCart();
   }
 };
