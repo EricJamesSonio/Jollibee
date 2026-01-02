@@ -1,19 +1,25 @@
 const { Kafka } = require("kafkajs");
 
 const kafka = new Kafka({
-  clientId: "payment-service",
-  brokers: ["localhost:9092"]
+  clientId: "order-service",
+  brokers: [process.env.KAFKA_BROKER || "kafka:9092"], // Docker-friendly
 });
 
 const producer = kafka.producer();
 
-async function sendPaymentConfirmed(payment) {
+async function sendOrderCreated(order) {
   await producer.connect();
   await producer.send({
-    topic: "PAYMENT_CONFIRMED",
-    messages: [{ value: JSON.stringify(payment) }]
+    topic: "ORDER_CREATED", // the topic your payment service listens to
+    messages: [
+      {
+        value: JSON.stringify({
+          order_id: order.id,
+          total: order.total,
+        }),
+      },
+    ],
   });
-  await producer.disconnect();
 }
 
-module.exports = { sendPaymentConfirmed };
+module.exports = { sendOrderCreated };

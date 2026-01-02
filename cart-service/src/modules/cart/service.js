@@ -34,5 +34,13 @@ module.exports = {
     await sendCartCheckout(cart); // Kafka event
     await repository.clearCart();
     return cart;
+  },
+    async clearCart() {
+    return new Promise((resolve, reject) => {
+      db.run(`DELETE FROM cart_items`, function(err) { // adjust table name if needed
+        if (err) return reject(err);
+        resolve();
+      });
+    });
   }
 };
