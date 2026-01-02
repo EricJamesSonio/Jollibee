@@ -6,7 +6,8 @@ module.exports = {
       menu_item_id INTEGER,
       name TEXT,
       price REAL,
-      quantity INTEGER
+      quantity INTEGER,
+      image_url TEXT 
     )
   `
 };

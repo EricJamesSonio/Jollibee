@@ -3,7 +3,13 @@ const { sendCartCheckout } = require("../../kafka/producer");
 
 module.exports = {
   async addItem(item) {
-    return repository.addItem(item);
+    return repository.addItem({
+      menu_item_id: item.menu_item_id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image_url: item.image_url
+    });
   },
 
   async getCart() {
@@ -17,19 +23,16 @@ module.exports = {
   },
 
   async updateItemQuantity(id, quantity) {
-  if (quantity <= 0) {
-    return repository.removeItem(id);
-  }
-  return repository.updateQuantity(id, quantity);
-},
-
+    if (quantity <= 0) return repository.removeItem(id);
+    return repository.updateQuantity(id, quantity);
+  },
 
   async checkout() {
     const cart = await this.getCart();
-    if (cart.items.length === 0) throw new Error("Cart is empty");
-    
-    await sendCartCheckout(cart);   // send event to Kafka
-    await repository.clearCart();   // clear cart after checkout
+    if (!cart.items.length) throw new Error("Cart is empty");
+
+    await sendCartCheckout(cart); // Kafka event
+    await repository.clearCart();
     return cart;
   }
 };

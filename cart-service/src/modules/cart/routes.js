@@ -22,7 +22,6 @@ router.put("/cart/item/:id", async (req, res, next) => {
   }
 });
 
-
 router.get("/cart", async (req, res, next) => {
   try {
     const cart = await service.getCart();
@@ -45,6 +44,15 @@ router.post("/cart/checkout", async (req, res, next) => {
   try {
     const cart = await service.checkout();
     res.json({ message: "Checkout successful", cart });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/cart/clear", async (req, res, next) => {
+  try {
+    await service.clearCart(); // make sure your service has clearCart()
+    res.json({ message: "Cart cleared successfully" });
   } catch (err) {
     next(err);
   }

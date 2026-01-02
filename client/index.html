@@ -15,34 +15,31 @@
 
   <div class="kiosk-container">
     <!-- Sidebar -->
-    <aside id="categories" class="sidebar">
+    <aside class="sidebar">
 
-      <!-- 🛒 Cart Summary -->
+      <!-- Categories container -->
+      <div class="sidebar-categories" id="categories">
+        <!-- ✅ Category buttons will be injected here by JS -->
+      </div>
+
+      <!-- 🛒 Cart Summary pinned at bottom -->
       <div class="cart-summary">
-        <div class="cart-title">
-          🛒 Cart
-        </div>
-
+        <div class="cart-title">🛒 Cart</div>
         <div class="cart-info">
           <span>Items:</span>
           <strong id="cart-count">0</strong>
         </div>
-
         <div class="cart-info">
           <span>Total:</span>
           <strong id="cart-total">₱0.00</strong>
         </div>
       </div>
 
-      <hr />
-
-      <!-- ✅ Category buttons will be injected here by JS -->
-
     </aside>
 
     <!-- Main Display -->
     <main class="menu-screen">
-      <h2 id="category-title">Chicken</h2>
+      <h2 id="category-title">Chicken Meals</h2>
       <div id="menu-items" class="menu-grid"></div>
     </main>
   </div>
@@ -61,29 +58,28 @@
         <button id="qty-plus">+</button>
       </div>
 
-      <button id="add-to-cart-btn" class="add-btn">
-        Add to Cart
-      </button>
+      <button id="add-to-cart-btn" class="add-btn">Add to Cart</button>
     </div>
   </div>
 
-<div id="cart-drawer" class="cart-drawer hidden">
-  <div class="cart-drawer-header">
-    <h2>Your Cart</h2>
-    <button id="cart-drawer-close">✕</button>
-  </div>
-
-  <div id="cart-drawer-items" class="cart-drawer-items"></div>
-
-  <div class="cart-drawer-footer">
-    <div class="cart-total-row">
-      <span>Total</span>
-      <strong id="drawer-total">₱0.00</strong>
+  <!-- Cart Drawer -->
+  <div id="cart-drawer" class="cart-drawer hidden">
+    <div class="cart-drawer-header">
+      <h2>Your Cart</h2>
+      <button id="cart-drawer-close">✕</button>
     </div>
-    <button class="checkout-btn">Checkout</button>
-  </div>
-</div>
 
+    <div id="cart-drawer-items" class="cart-drawer-items"></div>
+
+    <div class="cart-drawer-footer">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <strong id="drawer-total">₱0.00</strong>
+      </div>
+      <button id="checkout-btn" class="checkout-btn">Checkout</button>
+
+    </div>
+  </div>
 
   <script type="module" src="app.js"></script>
 </body>

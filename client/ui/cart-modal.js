@@ -48,6 +48,7 @@ addBtn.onclick = async () => {
       name: currentItem.name,
       price: currentItem.price,
       quantity,
+      image_url: currentItem.image_url
     });
 
     // ✅ Refresh cart summary after add

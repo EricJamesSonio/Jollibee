@@ -21,4 +21,14 @@ router.put("/orders/:id/complete", async (req, res, next) => {
   }
 });
 
+router.post("/orders", async (req, res, next) => {
+  try {
+    const order = await service.createOrderFromCart(req.body);
+    res.status(201).json(order);
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 module.exports = router;

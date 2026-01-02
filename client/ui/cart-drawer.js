@@ -1,18 +1,22 @@
 import {
   getCart,
   removeCartItem,
-  updateCartItem
+  updateCartItem,
+  clearCart
 } from "../services/cart.js";
 
 import { computeCart } from "../state/cart.js";
 import { API_BASE } from "../config/api.js";
 import { refreshCartSummary } from "./cart-summary.js";
+import { checkout } from "../services/order.js";
 
 const drawer = document.getElementById("cart-drawer");
 const itemsDiv = document.getElementById("cart-drawer-items");
 const totalEl = document.getElementById("drawer-total");
 const closeBtn = document.getElementById("cart-drawer-close");
+const checkoutBtn = document.getElementById("checkout-btn");
 
+// ------------------- Drawer Controls -------------------
 export function openCartDrawer() {
   drawer.classList.remove("hidden");
   renderCartDrawer();
@@ -24,6 +28,7 @@ export function closeCartDrawer() {
 
 closeBtn.onclick = closeCartDrawer;
 
+// ------------------- Render Cart Drawer -------------------
 async function renderCartDrawer() {
   const cart = await getCart();
   const { total } = computeCart(cart);
@@ -57,14 +62,14 @@ async function renderCartDrawer() {
       <button class="cart-item-remove">✕</button>
     `;
 
-    // ❌ Remove item
+    // Remove item
     div.querySelector(".cart-item-remove").onclick = async () => {
       await removeCartItem(item.id);
       await refreshCartSummary();
       renderCartDrawer();
     };
 
-    // ➖➕ Quantity controls
+    // Quantity controls
     const minusBtn = div.querySelector(".qty-minus");
     const plusBtn = div.querySelector(".qty-plus");
 
@@ -87,3 +92,33 @@ async function renderCartDrawer() {
 
   totalEl.textContent = `₱${total.toFixed(2)}`;
 }
+
+// ------------------- Checkout Button -------------------
+checkoutBtn.onclick = async () => {
+  try {
+    const cart = await getCart();
+
+    if (!cart.items.length) {
+      alert("Cart is empty");
+      return;
+    }
+
+    // Confirm checkout
+    const confirmCheckout = confirm(
+      `You have ${cart.items.length} items. Proceed to checkout?`
+    );
+    if (!confirmCheckout) return;
+
+    const order = await checkout(cart);
+
+    alert(`✅ Order #${order.id} placed!`);
+
+    // Clear cart and refresh
+    await clearCart();
+    await refreshCartSummary();
+    closeCartDrawer();
+  } catch (err) {
+    alert("Checkout failed");
+    console.error(err);
+  }
+};

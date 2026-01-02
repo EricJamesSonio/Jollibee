@@ -35,3 +35,12 @@ export async function updateCartItem(id, quantity) {
   if (!res.ok) throw new Error("Failed to update quantity");
 }
 
+// ✅ Add this function
+export async function clearCart() {
+  const res = await fetch(`${API.cart.base()}/cart/clear`, {
+    method: "POST", // or DELETE depending on your backend
+  });
+
+  if (!res.ok) throw new Error("Failed to clear cart");
+  return res.json();
+}

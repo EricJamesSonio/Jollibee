@@ -11,4 +11,9 @@ export const API = {
   cart: {
     base: () => `${API_BASE}/cart`,
   },
+
+  orders: {
+  create: () => `${API_BASE}/orders/orders`,
+},
+
 };
