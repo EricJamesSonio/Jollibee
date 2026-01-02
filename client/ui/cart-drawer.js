@@ -1,4 +1,9 @@
-import { getCart, removeCartItem } from "../services/cart.js";
+import {
+  getCart,
+  removeCartItem,
+  updateCartItem
+} from "../services/cart.js";
+
 import { computeCart } from "../state/cart.js";
 import { API_BASE } from "../config/api.js";
 import { refreshCartSummary } from "./cart-summary.js";
@@ -27,6 +32,8 @@ async function renderCartDrawer() {
 
   if (!cart.items.length) {
     itemsDiv.innerHTML = "<p>Your cart is empty.</p>";
+    totalEl.textContent = "₱0.00";
+    return;
   }
 
   cart.items.forEach(item => {
@@ -35,15 +42,42 @@ async function renderCartDrawer() {
 
     div.innerHTML = `
       <img src="${API_BASE}${item.image_url || "/images/placeholder.png"}" />
+
       <div class="cart-item-info">
         <p><strong>${item.name}</strong></p>
-        <p>₱${item.price.toFixed(2)} × ${item.quantity}</p>
+        <p>₱${item.price.toFixed(2)}</p>
+
+        <div class="qty-controls">
+          <button class="qty-minus">−</button>
+          <span class="qty-value">${item.quantity}</span>
+          <button class="qty-plus">+</button>
+        </div>
       </div>
+
       <button class="cart-item-remove">✕</button>
     `;
 
+    // ❌ Remove item
     div.querySelector(".cart-item-remove").onclick = async () => {
       await removeCartItem(item.id);
+      await refreshCartSummary();
+      renderCartDrawer();
+    };
+
+    // ➖➕ Quantity controls
+    const minusBtn = div.querySelector(".qty-minus");
+    const plusBtn = div.querySelector(".qty-plus");
+
+    minusBtn.onclick = async () => {
+      if (item.quantity > 1) {
+        await updateCartItem(item.id, item.quantity - 1);
+        await refreshCartSummary();
+        renderCartDrawer();
+      }
+    };
+
+    plusBtn.onclick = async () => {
+      await updateCartItem(item.id, item.quantity + 1);
       await refreshCartSummary();
       renderCartDrawer();
     };

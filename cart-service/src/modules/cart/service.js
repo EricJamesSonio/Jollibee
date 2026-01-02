@@ -16,6 +16,14 @@ module.exports = {
     return repository.removeItem(id);
   },
 
+  async updateItemQuantity(id, quantity) {
+  if (quantity <= 0) {
+    return repository.removeItem(id);
+  }
+  return repository.updateQuantity(id, quantity);
+},
+
+
   async checkout() {
     const cart = await this.getCart();
     if (cart.items.length === 0) throw new Error("Cart is empty");

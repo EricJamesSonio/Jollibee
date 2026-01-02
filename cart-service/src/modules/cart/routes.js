@@ -12,6 +12,17 @@ router.post("/cart/add", async (req, res, next) => {
   }
 });
 
+router.put("/cart/item/:id", async (req, res, next) => {
+  try {
+    const { quantity } = req.body;
+    await service.updateItemQuantity(req.params.id, quantity);
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 router.get("/cart", async (req, res, next) => {
   try {
     const cart = await service.getCart();

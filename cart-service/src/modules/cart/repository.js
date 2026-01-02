@@ -33,6 +33,20 @@ module.exports = {
     });
   },
 
+  updateQuantity(id, quantity) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      `UPDATE cart_items SET quantity = ? WHERE id = ?`,
+      [quantity, id],
+      function (err) {
+        if (err) return reject(err);
+        resolve(this.changes);
+      }
+    );
+  });
+},
+
+
   clearCart() {
     return new Promise((resolve, reject) => {
       db.run(`DELETE FROM cart_items`, [], function(err) {

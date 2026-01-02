@@ -162,3 +162,13 @@
   cursor: pointer;
 }
 
+.cart-item .qty-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.cart-item .qty-controls button {
+  padding: 0.3rem 0.6rem;
+  font-size: 1rem;
+}

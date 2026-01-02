@@ -24,3 +24,14 @@ export async function removeCartItem(id) {
 
   if (!res.ok) throw new Error("Failed to remove item");
 }
+
+export async function updateCartItem(id, quantity) {
+  const res = await fetch(`${API.cart.base()}/cart/item/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ quantity }),
+  });
+
+  if (!res.ok) throw new Error("Failed to update quantity");
+}
+
