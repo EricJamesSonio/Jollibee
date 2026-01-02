@@ -24,17 +24,6 @@ Feature
 - Checkout contains the totals
 - Payment will be process by the Cashier account!
 
-**Menu Display:**  
-<img src="assets/menu.png" alt="Menu Display" width="400"/>
-
-**Add to Cart Display:**  
-<img src="assets/addtocart.png" alt="Add to Cart" width="400"/>
-
-**Cart Display:**  
-<img src="assets/cart.png" alt="Cart Display" width="400"/>
-
--------------------------------------------------------------------------------------
-
 Microservices
 - use database.sqlite (for simplicity so no need for xampp or some)
 - module based stucture having module folder then inside is repository, routes, controller, services, dto, index.js
@@ -80,3 +69,17 @@ Step by step building as a solo developer!
 2. Api gateways - set up the api gateway so that its ready before the client is created
 3. Client side - build the client and shape the needs depends on what the backend can provide
 4. Kafka - consumer, producer and broker will be created so ensure!
+
+---------------------------------------------------------------------------------------
+Overview: 
+
+**Menu Display:**  
+<img src="assets/menu.png" alt="Menu Display" width="400"/>
+
+**Add to Cart Display:**  
+<img src="assets/addtocart.png" alt="Add to Cart" width="400"/>
+
+**Cart Display:**  
+<img src="assets/cart.png" alt="Cart Display" width="400"/>
+
+-------------------------------------------------------------------------------------
