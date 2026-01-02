@@ -7,17 +7,25 @@ const categoriesDiv = qs("#categories");
 const categoryTitle = qs("#category-title");
 
 export function renderCategories(categories) {
-  clear(categoriesDiv);
+  const categoriesDiv = document.getElementById("categories");
+
+  const categoryContainer = document.createElement("div");
+  categoryContainer.className = "category-list";
 
   categories.forEach(cat => {
     const btn = document.createElement("button");
     btn.className = "category-btn";
     btn.textContent = cat.name;
-
     btn.onclick = () => setActiveCategory(cat);
-    categoriesDiv.appendChild(btn);
+    categoryContainer.appendChild(btn);
   });
+
+  const existingList = categoriesDiv.querySelector(".category-list");
+  if (existingList) existingList.remove();
+
+  categoriesDiv.appendChild(categoryContainer);
 }
+
 
 async function setActiveCategory(category) {
   if (menuState.activeCategoryCode === category.code) return;

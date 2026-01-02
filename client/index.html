@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jollibee Kiosk</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="cart.css" />
 </head>
 <body>
 
@@ -14,7 +15,30 @@
 
   <div class="kiosk-container">
     <!-- Sidebar -->
-    <aside id="categories" class="sidebar"></aside>
+    <aside id="categories" class="sidebar">
+
+      <!-- 🛒 Cart Summary -->
+      <div class="cart-summary">
+        <div class="cart-title">
+          🛒 Cart
+        </div>
+
+        <div class="cart-info">
+          <span>Items:</span>
+          <strong id="cart-count">0</strong>
+        </div>
+
+        <div class="cart-info">
+          <span>Total:</span>
+          <strong id="cart-total">₱0.00</strong>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- ✅ Category buttons will be injected here by JS -->
+
+    </aside>
 
     <!-- Main Display -->
     <main class="menu-screen">
@@ -22,6 +46,44 @@
       <div id="menu-items" class="menu-grid"></div>
     </main>
   </div>
+
+  <!-- Add-to-cart Modal -->
+  <div id="cart-modal" class="modal hidden">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">✕</button>
+
+      <h2 id="modal-name"></h2>
+      <p id="modal-price"></p>
+
+      <div class="qty-controls">
+        <button id="qty-minus">−</button>
+        <span id="qty-value">1</span>
+        <button id="qty-plus">+</button>
+      </div>
+
+      <button id="add-to-cart-btn" class="add-btn">
+        Add to Cart
+      </button>
+    </div>
+  </div>
+
+<div id="cart-drawer" class="cart-drawer hidden">
+  <div class="cart-drawer-header">
+    <h2>Your Cart</h2>
+    <button id="cart-drawer-close">✕</button>
+  </div>
+
+  <div id="cart-drawer-items" class="cart-drawer-items"></div>
+
+  <div class="cart-drawer-footer">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <strong id="drawer-total">₱0.00</strong>
+    </div>
+    <button class="checkout-btn">Checkout</button>
+  </div>
+</div>
+
 
   <script type="module" src="app.js"></script>
 </body>
