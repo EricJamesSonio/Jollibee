@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cashier Dashboard</title>
+  <link rel="stylesheet" href="cashier.css" />
+</head>
+<body>
+  <header>
+    <h1>Cashier Dashboard</h1>
+  </header>
+
+  <main>
+    <section id="orders-container">
+      <!-- Orders will be injected here -->
+    </section>
+  </main>
+
+  <!-- Order details modal -->
+  <div id="order-modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="order-modal-close">✕</button>
+      <h2>Order #<span id="modal-order-id"></span></h2>
+      <div id="modal-items"></div>
+      <div id="modal-total"></div>
+      <div>
+        <label>
+          Amount Paid: ₱<input type="number" id="amount-paid" min="0" step="0.01"/>
+        </label>
+        <button id="pay-btn">Pay</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
